@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Validador de Argumentos Lógicos</title>
     <style>
-        /* ===== VARIABLES DE COLOR ===== */
+        /*VARIABLES DE COLOR*/
         :root {
             --azul-marino: #0d1b3e;      /* Azul marino muy oscuro */
             --azul-medio: #1e3a8a;       /* Azul marino más claro */
@@ -17,7 +17,7 @@
             --negro: #000000;
         }
 
-        /* ===== CONFIGURACIÓN GLOBAL ===== */
+        /*CONFIGURACIÓN GLOBAL*/
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
             background-color: var(--gris-fondo);
@@ -41,7 +41,7 @@
             border-radius: 8px;
         }
 
-        /* ===== ENCABEZADO ===== */
+        /*ENCABEZADO*/
         header {
             text-align: center;
             border-bottom: 3px solid var(--azul-marino);
@@ -62,7 +62,7 @@
             font-size: 16px;
         }
 
-        /* ===== PESTAÑAS ===== */
+        /*PESTAÑAS*/
         .tabs {
             display: flex;
             gap: 5px;
@@ -94,7 +94,7 @@
             border-color: var(--azul-marino);
         }
 
-        /* ===== VISTAS ===== */
+        /*VISTAS*/
         .vista {
             display: none;
         }
@@ -103,7 +103,7 @@
             display: block;
         }
 
-        /* ===== INSTRUCCIONES ===== */
+        /*INSTRUCCIONES*/
         .instrucciones {
             border: 1px solid var(--gris-borde);
             padding: 15px;
@@ -129,7 +129,7 @@
             margin-bottom: 3px;
         }
 
-        /* ===== FORMULARIO ===== */
+        /*FORMULARIO*/
         .formulario {
             display: flex;
             flex-direction: column;
@@ -160,7 +160,7 @@
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
         }
 
-        /* ===== BOTONES ===== */
+        /*BOTONES*/
         .botones-accion {
             display: flex;
             gap: 12px;
@@ -199,7 +199,7 @@
             transform: translateY(-1px);
         }
 
-        /* ===== RESULTADO ===== */
+        /*RESULTADO*/
         .resultado {
             margin-top: 20px;
             padding: 18px;
@@ -223,7 +223,7 @@
             border-color: #ef4444;
         }
 
-        /* ===== TABLAS DE VERDAD ===== */
+        /*TABLAS DE VERDAD*/
         .contenedor-tablas {
             margin-top: 20px;
             overflow-x: auto;
@@ -270,7 +270,7 @@
             padding-bottom: 5px;
         }
 
-        /* ===== RESPONSIVE ===== */
+        /*RESPONSIVE*/
         @media (max-width: 600px) {
             .contenedor {
                 padding: 15px;
@@ -358,19 +358,14 @@
     </div>
 
     <script>
-        // ===================================================================
         // VARIABLES GLOBALES
-        // ===================================================================
         let proposicionesActuales = {
             p1: "",
             p2: "",
             p3: "",
             conclusion: ""
         };
-
-        // ===================================================================
         // FUNCIÓN PARA CAMBIAR ENTRE PESTAÑAS
-        // ===================================================================
         function cambiarPestana(nombre) {
             document.querySelectorAll('.vista').forEach(vista => {
                 vista.classList.remove('activa');
@@ -387,10 +382,7 @@
                 document.getElementById('tab-tablas').classList.add('activo');
             }
         }
-
-        // ===================================================================
         // FUNCIÓN PRINCIPAL: VALIDAR ARGUMENTO
-        // ===================================================================
         function validarArgumento() {
             let p1 = document.getElementById("p1").value.trim();
             let p2 = document.getElementById("p2").value.trim();
@@ -443,10 +435,7 @@
                 mostrarResultado("❌ El argumento no es válido", false);
             }
         }
-
-        // ===================================================================
         // FUNCIÓN PARA EVALUAR UNA PROPOSICIÓN
-        // ===================================================================
         function evaluarProposicion(texto, valores) {
             let expr = texto
                 .replace(/and/g, '&&')
@@ -468,10 +457,7 @@
                 return false;
             }
         }
-
-        // ===================================================================
         // FUNCIÓN PARA MOSTRAR RESULTADO
-        // ===================================================================
         function mostrarResultado(mensaje, esValido) {
             let divResultado = document.getElementById("resultado");
             divResultado.style.display = "block";
@@ -483,10 +469,7 @@
                 divResultado.className = "resultado no-valido";
             }
         }
-
-        // ===================================================================
         // FUNCIÓN RANDOM
-        // ===================================================================
         function generarRandom() {
             const proposiciones = [
                 "p", "q", "r",
@@ -512,10 +495,7 @@
 
             document.getElementById("resultado").style.display = "none";
         }
-
-        // ===================================================================
         // FUNCIÓN PARA GENERAR TABLAS DE VERDAD
-        // ===================================================================
         function generarTablasVerdad() {
             let p1 = proposicionesActuales.p1 || document.getElementById("p1").value.trim();
             let p2 = proposicionesActuales.p2 || document.getElementById("p2").value.trim();
@@ -591,10 +571,7 @@
 
             document.getElementById("contenedor-tablas").innerHTML = html;
         }
-
-        // ===================================================================
         // INICIALIZACIÓN
-        // ===================================================================
         document.addEventListener('DOMContentLoaded', function() {
             cambiarPestana('validador');
         });
