@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validador de Argumentos Lógicos</title>
+    <style>
+        /* ===== VARIABLES DE COLOR ===== */
+        :root {
+            --azul-marino: #0d1b3e;      /* Azul marino muy oscuro */
+            --azul-medio: #1e3a8a;       /* Azul marino más claro */
+            --azul-claro: #3b82f6;       /* Azul brillante para botones */
+            --gris-fondo: #f3f4f6;       /* Gris muy claro para fondo */
+            --gris-borde: #9ca3af;       /* Gris para bordes */
+            --gris-texto: #4b5563;       /* Gris para textos secundarios */
+            --blanco: #ffffff;
+            --negro: #000000;
+        }
+
+        /* ===== CONFIGURACIÓN GLOBAL ===== */
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: var(--gris-fondo);
+            color: var(--negro);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .contenedor {
+            background-color: var(--blanco);
+            border: 2px solid var(--azul-marino);
+            padding: 30px;
+            width: 100%;
+            max-width: 800px;
+            box-sizing: border-box;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-radius: 8px;
+        }
+
+        /* ===== ENCABEZADO ===== */
+        header {
+            text-align: center;
+            border-bottom: 3px solid var(--azul-marino);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: var(--azul-marino);
+            margin: 0 0 5px 0;
+        }
+
+        .subtitulo {
+            font-style: italic;
+            color: var(--gris-texto);
+            margin: 0;
+            font-size: 16px;
+        }
+
+        /* ===== PESTAÑAS ===== */
+        .tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--gris-borde);
+        }
+
+        .tab {
+            padding: 12px 25px;
+            background-color: var(--gris-fondo);
+            color: var(--azul-marino);
+            border: 2px solid var(--gris-borde);
+            border-bottom: none;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 6px 6px 0 0;
+            transition: all 0.2s;
+        }
+
+        .tab:hover {
+            background-color: var(--gris-borde);
+            color: var(--blanco);
+        }
+
+        .tab.activo {
+            background-color: var(--azul-marino);
+            color: var(--blanco);
+            border-color: var(--azul-marino);
+        }
+
+        /* ===== VISTAS ===== */
+        .vista {
+            display: none;
+        }
+
+        .vista.activa {
+            display: block;
+        }
+
+        /* ===== INSTRUCCIONES ===== */
+        .instrucciones {
+            border: 1px solid var(--gris-borde);
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: var(--gris-fondo);
+            border-left: 6px solid var(--azul-marino);
+            border-radius: 4px;
+        }
+
+        .instrucciones h2 {
+            font-size: 18px;
+            margin-top: 0;
+            color: var(--azul-marino);
+        }
+
+        .instrucciones ul {
+            padding-left: 20px;
+            color: var(--gris-texto);
+            margin-bottom: 5px;
+        }
+
+        .instrucciones ul li {
+            margin-bottom: 3px;
+        }
+
+        /* ===== FORMULARIO ===== */
+        .formulario {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-weight: bold;
+            color: var(--azul-marino);
+            margin-top: 5px;
+            font-size: 15px;
+        }
+
+        input[type="text"] {
+            padding: 12px;
+            border: 2px solid var(--gris-borde);
+            background-color: var(--blanco);
+            color: var(--negro);
+            font-size: 16px;
+            font-family: 'Courier New', monospace;
+            border-radius: 6px;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--azul-claro);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+        }
+
+        /* ===== BOTONES ===== */
+        .botones-accion {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        button {
+            padding: 14px 24px;
+            border: none;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .btn-principal {
+            background-color: var(--azul-claro);
+            color: var(--blanco);
+            flex: 1;
+        }
+
+        .btn-principal:hover {
+            background-color: var(--azul-medio);
+            transform: translateY(-1px);
+        }
+
+        .btn-random {
+            background-color: var(--gris-texto);
+            color: var(--blanco);
+            flex: 0 0 auto;
+        }
+
+        .btn-random:hover {
+            background-color: var(--azul-marino);
+            transform: translateY(-1px);
+        }
+
+        /* ===== RESULTADO ===== */
+        .resultado {
+            margin-top: 20px;
+            padding: 18px;
+            border: 3px solid var(--azul-marino);
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            display: none;
+            border-radius: 6px;
+        }
+
+        .resultado.valido {
+            background-color: #d1fae5;
+            color: #065f46;
+            border-color: #10b981;
+        }
+
+        .resultado.no-valido {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border-color: #ef4444;
+        }
+
+        /* ===== TABLAS DE VERDAD ===== */
+        .contenedor-tablas {
+            margin-top: 20px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        th, td {
+            border: 1px solid var(--gris-borde);
+            padding: 10px 14px;
+            text-align: center;
+        }
+
+        th {
+            background-color: var(--azul-marino);
+            color: var(--blanco);
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        tr:nth-child(even) {
+            background-color: var(--gris-fondo);
+        }
+
+        tr:hover {
+            background-color: #e0e7ff;
+        }
+
+        .titulo-tabla {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--azul-marino);
+            margin-top: 25px;
+            margin-bottom: 8px;
+            border-bottom: 2px solid var(--azul-marino);
+            padding-bottom: 5px;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 600px) {
+            .contenedor {
+                padding: 15px;
+            }
+            .botones-accion {
+                flex-direction: column;
+            }
+            .tabs {
+                flex-direction: column;
+            }
+            .tab {
+                border-bottom: 2px solid var(--gris-borde);
+                border-radius: 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="contenedor">
+        
+        <header>
+            <h1>Validador de Argumentos Lógicos</h1>
+            <p class="subtitulo">Lógica y Estructuras Discretas</p>
+        </header>
+
+        <!-- PESTAÑAS -->
+        <div class="tabs">
+            <button id="tab-validador" class="tab activo" onclick="cambiarPestana('validador')">Validador</button>
+            <button id="tab-tablas" class="tab" onclick="cambiarPestana('tablas')">Tablas de Verdad</button>
+        </div>
+
+        <!-- VISTA 1: VALIDADOR -->
+        <section id="vista-validador" class="vista activa">
+            
+            <div class="instrucciones">
+                <h2>Instrucciones</h2>
+                <p>Ingresa las premisas y la conclusión usando las letras <strong>p, q, r</strong>.</p>
+                <ul>
+                    <li>Usa <strong>and</strong> para conjunción (Y).</li>
+                    <li>Usa <strong>or</strong> para disyunción (O).</li>
+                    <li>Usa <strong>not</strong> para negación (NO).</li>
+                    <li>Usa <strong>→</strong> para implicación (Si... entonces...).</li>
+                    <li>Usa <strong>paréntesis ( )</strong> para agrupar proposiciones compuestas.</li>
+                </ul>
+                <p><em>Ejemplo: (p → q) and (q → r)</em></p>
+            </div>
+
+            <div class="formulario">
+                <label for="p1">Premisa 1:</label>
+                <input type="text" id="p1" placeholder="Ej: (p → q)" value="(p → q)">
+
+                <label for="p2">Premisa 2 (Opcional):</label>
+                <input type="text" id="p2" placeholder="Ej: p" value="p">
+
+                <label for="p3">Premisa 3 (Opcional):</label>
+                <input type="text" id="p3" placeholder="Ej: q" value="">
+
+                <label for="conclusion">Conclusión:</label>
+                <input type="text" id="conclusion" placeholder="Ej: q" value="q">
+
+                <div class="botones-accion">
+                    <button onclick="validarArgumento()" class="btn-principal">Validar Argumento</button>
+                    <button onclick="generarRandom()" class="btn-random">🎲 Random</button>
+                </div>
+            </div>
+
+            <div id="resultado" class="resultado">
+                <!-- Aquí aparece el resultado -->
+            </div>
+        </section>
+
+        <!-- VISTA 2: TABLAS DE VERDAD -->
+        <section id="vista-tablas" class="vista">
+            <h2 style="color: var(--azul-marino);">Tablas de Verdad</h2>
+            <p>Aquí se muestran las tablas de verdad de las premisas y la conclusión ingresadas.</p>
+            
+            <button onclick="generarTablasVerdad()" class="btn-principal" style="width: 100%; margin-bottom: 15px;">Mostrar Tablas de Verdad</button>
+            
+            <div id="contenedor-tablas" class="contenedor-tablas">
+                <!-- Aquí se generan las tablas -->
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        // ===================================================================
+        // VARIABLES GLOBALES
+        // ===================================================================
+        let proposicionesActuales = {
+            p1: "",
+            p2: "",
+            p3: "",
+            conclusion: ""
+        };
+
+        // ===================================================================
+        // FUNCIÓN PARA CAMBIAR ENTRE PESTAÑAS
+        // ===================================================================
+        function cambiarPestana(nombre) {
+            document.querySelectorAll('.vista').forEach(vista => {
+                vista.classList.remove('activa');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('activo');
+            });
+
+            if (nombre === 'validador') {
+                document.getElementById('vista-validador').classList.add('activa');
+                document.getElementById('tab-validador').classList.add('activo');
+            } else if (nombre === 'tablas') {
+                document.getElementById('vista-tablas').classList.add('activa');
+                document.getElementById('tab-tablas').classList.add('activo');
+            }
+        }
+
+        // ===================================================================
+        // FUNCIÓN PRINCIPAL: VALIDAR ARGUMENTO
+        // ===================================================================
+        function validarArgumento() {
+            let p1 = document.getElementById("p1").value.trim();
+            let p2 = document.getElementById("p2").value.trim();
+            let p3 = document.getElementById("p3").value.trim();
+            let conclusion = document.getElementById("conclusion").value.trim();
+
+            proposicionesActuales = { p1, p2, p3, conclusion };
+
+            if (p1 === "" || conclusion === "") {
+                mostrarResultado("Error: La Premisa 1 y la Conclusión son obligatorias.", false);
+                return;
+            }
+
+            let premisas = [p1];
+            if (p2 !== "") premisas.push(p2);
+            if (p3 !== "") premisas.push(p3);
+
+            const valoresVerdad = [true, false];
+            let esValido = true;
+
+            for (let valP of valoresVerdad) {
+                for (let valQ of valoresVerdad) {
+                    for (let valR of valoresVerdad) {
+                        let valores = { p: valP, q: valQ, r: valR };
+
+                        let todasPremisasVerdaderas = true;
+                        for (let premisa of premisas) {
+                            if (!evaluarProposicion(premisa, valores)) {
+                                todasPremisasVerdaderas = false;
+                                break;
+                            }
+                        }
+
+                        if (todasPremisasVerdaderas) {
+                            let valorConclusion = evaluarProposicion(conclusion, valores);
+                            if (!valorConclusion) {
+                                esValido = false;
+                                break;
+                            }
+                        }
+                    }
+                    if (!esValido) break;
+                }
+                if (!esValido) break;
+            }
+
+            if (esValido) {
+                mostrarResultado("✅ El argumento es válido", true);
+            } else {
+                mostrarResultado("❌ El argumento no es válido", false);
+            }
+        }
+
+        // ===================================================================
+        // FUNCIÓN PARA EVALUAR UNA PROPOSICIÓN
+        // ===================================================================
+        function evaluarProposicion(texto, valores) {
+            let expr = texto
+                .replace(/and/g, '&&')
+                .replace(/or/g, '||')
+                .replace(/not/g, '!');
+
+            expr = expr.replace(/\bp\b/g, valores.p);
+            expr = expr.replace(/\bq\b/g, valores.q);
+            expr = expr.replace(/\br\b/g, valores.r);
+
+            // Transformar implicación (→) a (!A || B)
+            expr = expr.replace(/([a-z()!&|]+)\s*→\s*([a-z()!&|]+)/g, '(!$1 || $2)');
+
+            try {
+                let resultado = new Function('return ' + expr)();
+                return resultado;
+            } catch (error) {
+                console.error("Error al evaluar:", expr, error);
+                return false;
+            }
+        }
+
+        // ===================================================================
+        // FUNCIÓN PARA MOSTRAR RESULTADO
+        // ===================================================================
+        function mostrarResultado(mensaje, esValido) {
+            let divResultado = document.getElementById("resultado");
+            divResultado.style.display = "block";
+            divResultado.textContent = mensaje;
+            
+            if (esValido) {
+                divResultado.className = "resultado valido";
+            } else {
+                divResultado.className = "resultado no-valido";
+            }
+        }
+
+        // ===================================================================
+        // FUNCIÓN RANDOM
+        // ===================================================================
+        function generarRandom() {
+            const proposiciones = [
+                "p", "q", "r",
+                "not p", "not q", "not r",
+                "p and q", "p or q", "q and r", "p or r",
+                "p → q", "q → r", "p → r",
+                "not p → q", "not q → r",
+                "(p → q) and (q → r)",
+                "(p and q) → r",
+                "p and (q or r)",
+                "not (p and q)",
+                "p or (q and not r)"
+            ];
+
+            function elegirAleatorio(arr) {
+                return arr[Math.floor(Math.random() * arr.length)];
+            }
+
+            document.getElementById("p1").value = elegirAleatorio(proposiciones);
+            document.getElementById("p2").value = elegirAleatorio(proposiciones);
+            document.getElementById("p3").value = elegirAleatorio(proposiciones);
+            document.getElementById("conclusion").value = elegirAleatorio(proposiciones);
+
+            document.getElementById("resultado").style.display = "none";
+        }
+
+        // ===================================================================
+        // FUNCIÓN PARA GENERAR TABLAS DE VERDAD
+        // ===================================================================
+        function generarTablasVerdad() {
+            let p1 = proposicionesActuales.p1 || document.getElementById("p1").value.trim();
+            let p2 = proposicionesActuales.p2 || document.getElementById("p2").value.trim();
+            let p3 = proposicionesActuales.p3 || document.getElementById("p3").value.trim();
+            let conclusion = proposicionesActuales.conclusion || document.getElementById("conclusion").value.trim();
+
+            if (p1 === "" || conclusion === "") {
+                document.getElementById("contenedor-tablas").innerHTML = 
+                    "<p style='color: #0d1b3e; font-weight: bold;'>⚠️ Primero ingresa al menos la Premisa 1 y la Conclusión en la pestaña Validador.</p>";
+                return;
+            }
+
+            let premisas = [p1];
+            if (p2 !== "") premisas.push(p2);
+            if (p3 !== "") premisas.push(p3);
+
+            const valoresVerdad = [true, false];
+            let combinaciones = [];
+
+            for (let valP of valoresVerdad) {
+                for (let valQ of valoresVerdad) {
+                    for (let valR of valoresVerdad) {
+                        combinaciones.push({ p: valP, q: valQ, r: valR });
+                    }
+                }
+            }
+
+            let html = "";
+
+            // Tabla de premisas
+            html += '<div class="titulo-tabla">Premisas</div>';
+            html += '<table>';
+            html += '<thead><tr>';
+            html += '<th>p</th><th>q</th><th>r</th>';
+            premisas.forEach((premisa, index) => {
+                html += `<th>P${index + 1}: ${premisa}</th>`;
+            });
+            html += '</tr></thead><tbody>';
+
+            combinaciones.forEach(comb => {
+                html += '<tr>';
+                html += `<td>${comb.p ? 'V' : 'F'}</td>`;
+                html += `<td>${comb.q ? 'V' : 'F'}</td>`;
+                html += `<td>${comb.r ? 'V' : 'F'}</td>`;
+                premisas.forEach(premisa => {
+                    let resultado = evaluarProposicion(premisa, comb);
+                    html += `<td>${resultado ? 'V' : 'F'}</td>`;
+                });
+                html += '</tr>';
+            });
+
+            html += '</tbody></table>';
+
+            // Tabla de conclusión
+            html += '<div class="titulo-tabla">Conclusión</div>';
+            html += '<table>';
+            html += '<thead><tr>';
+            html += '<th>p</th><th>q</th><th>r</th>';
+            html += `<th>C: ${conclusion}</th>`;
+            html += '</tr></thead><tbody>';
+
+            combinaciones.forEach(comb => {
+                html += '<tr>';
+                html += `<td>${comb.p ? 'V' : 'F'}</td>`;
+                html += `<td>${comb.q ? 'V' : 'F'}</td>`;
+                html += `<td>${comb.r ? 'V' : 'F'}</td>`;
+                let resultado = evaluarProposicion(conclusion, comb);
+                html += `<td>${resultado ? 'V' : 'F'}</td>`;
+                html += '</tr>';
+            });
+
+            html += '</tbody></table>';
+
+            document.getElementById("contenedor-tablas").innerHTML = html;
+        }
+
+        // ===================================================================
+        // INICIALIZACIÓN
+        // ===================================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            cambiarPestana('validador');
+        });
+    </script>
+</body>
+</html>
